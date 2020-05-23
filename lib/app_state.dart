@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:eleven/models/players.dart';
 
 class AppState with ChangeNotifier {
   AppState();
 
-  String _displayText = "";
+  List<Player> _players = [];
 
-  void setDisplayText(String text) {
-    _displayText = text;
+  void addPlayer(Player player) {
+    _players.add(player);
     notifyListeners();
   }
 
-  String get getDisplayText => _displayText;
+  List<Player> get getPlayers => _players;
 }
