@@ -40,13 +40,13 @@ class FinalScoresState extends State<FinalScores> {
                 children: [
                   Text(player.name,
                     style: TextStyle(
-                      fontSize: 30.0,
+                      fontSize: 25.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(player.totalScore().toString(),
                     style: TextStyle(
-                      fontSize: 30.0,
+                      fontSize: 25.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

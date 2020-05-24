@@ -15,27 +15,41 @@ class ScoresState extends State<Scores> {
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.teal,
-          title: Row(
-            children: [
-              for (var player in appState.getPlayers) Expanded(
-                  child: Text(player.name, textAlign: TextAlign.center)
+    return
+      CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              backgroundColor: Colors.teal,
+              titleSpacing: 0,
+              title: Row(
+                children: [
+                  for (var player in appState.getPlayers) Expanded(
+                      child: Text(
+                        player.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                        ),
+                      )
+                  )
+                ],
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SingleChildScrollView(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    for (var player in appState.getPlayers) Expanded(
+                        child: scoresColumn(player, appState))
+                  ]
+                )
               )
-            ],
-          ),
-        ),
-        body: SingleChildScrollView(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                for (var player in appState.getPlayers) Expanded(
-                    child: scoresColumn(player, appState))
-              ]
             )
-        )
-    );
+          ]
+      );
   }
 
   Widget scoresColumn(Player player, AppState appState) {

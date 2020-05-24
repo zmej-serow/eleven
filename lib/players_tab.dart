@@ -22,7 +22,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
               title: Text(
                 appState.getPlayers[index].name,
                 style: TextStyle(
-                  fontSize: 26.0,
+                  fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
