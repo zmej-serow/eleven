@@ -37,14 +37,15 @@ class _MainScreenState extends State<MainScreen> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 10,
           flexibleSpace: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TabBar(
                 tabs: [
-                  Tab(icon: Icon(Icons.assignment_ind)),
-                  Tab(icon: Icon(Icons.insert_chart)),
-                  Tab(icon: Icon(Icons.stars)),
+                  Tab(icon: Icon(Icons.group)),
+                  Tab(icon: Icon(Icons.equalizer)),
+                  Tab(icon: Icon(Icons.grade)),
                 ],
               )
             ],
