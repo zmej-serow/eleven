@@ -17,13 +17,13 @@ class FinalScoresState extends State<FinalScores> {
     return Column(
       children: [
         for (var player in appState.getPlayers) Expanded(
-            child: finalScore(context, player)
+            child: finalScore(player)
         )
       ],
     );
   }
 
-  Widget finalScore(BuildContext context, Player player) {
+  Widget finalScore(Player player) {
     return Row(
       children: [
         Text(player.name),

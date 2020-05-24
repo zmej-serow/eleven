@@ -27,16 +27,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
                 style: TextStyle(color: Colors.white),
               ),
               color: Colors.red,
-              onPressed: () async {
-                String name = await showDialog(
-                    context: this.context,
-                    child: playerNameDialog(context)
-                );
-                if (name != null && name != "")
-                  Provider.of<AppState>(context, listen: false).addPlayer(
-                      Player(name, [])
-                  );
-              },
+              onPressed: createPlayer,
             )
           ],
         ),
@@ -44,13 +35,22 @@ class PlayersSelectionState extends State<PlayersSelection> {
     );
   }
 
+  void createPlayer() async {
+    String name = await showDialog(
+        context: this.context,
+        child: playerNameDialog(context)
+    );
+    if (name != null && name != "")
+      Provider.of<AppState>(context, listen: false).addPlayer(Player(name, []));
+  }
+
   Widget playerNameDialog(BuildContext context) {
-    TextEditingController _textFieldController = TextEditingController();
     return AlertDialog(
       title: Text("Enter player's name"),
       content: TextField(
-        controller: _textFieldController,
+        autofocus: true,
         decoration: InputDecoration(),
+        onSubmitted: (s) => Navigator.of(context).pop(s)
       ),
       actions: <Widget>[
         FlatButton(
@@ -59,12 +59,6 @@ class PlayersSelectionState extends State<PlayersSelection> {
             Navigator.of(context).pop();
           },
         ),
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop(_textFieldController.text);
-          },
-        )
       ],
     );
   }

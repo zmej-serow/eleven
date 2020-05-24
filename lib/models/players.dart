@@ -9,9 +9,6 @@ class Player {
   }
 
   int totalScore() {
-    if (this.scores.isEmpty)
-      return 0;
-    else
-      return this.scores.fold(0, (a, b) => a + b);
+    return this.scores.fold(0, (a, b) => a + b);
   }
 }
