@@ -17,20 +17,20 @@ class ElevenScoreKeeper extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: ChangeNotifierProvider<AppState>(
         create: (context) => AppState(),
-        child: MyHomePage(),
+        child: MainScreen(),
       )
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+class MainScreen extends StatefulWidget {
+  MainScreen({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(

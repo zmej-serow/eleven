@@ -12,7 +12,6 @@ class PlayersSelection extends StatefulWidget {
 class PlayersSelectionState extends State<PlayersSelection> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController _textFieldController = TextEditingController();
     final appState = Provider.of<AppState>(context);
 
     return Container(
@@ -29,39 +28,44 @@ class PlayersSelectionState extends State<PlayersSelection> {
               ),
               color: Colors.red,
               onPressed: () async {
-                  String name = await showDialog(
+                String name = await showDialog(
                     context: this.context,
-                    child: AlertDialog(
-                      title: Text("Enter player's name"),
-                      content: TextField(
-                        controller: _textFieldController,
-                        decoration: InputDecoration(),
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('CANCEL'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        FlatButton(
-                          child: Text('OK'),
-                          onPressed: () {
-                            Navigator.of(context).pop(_textFieldController.text);
-                          },
-                        )
-                      ],
-                    ),
+                    child: playerNameDialog(context)
+                );
+                if (name != null && name != "")
+                  Provider.of<AppState>(context, listen: false).addPlayer(
+                      Player(name, [])
                   );
-                  if (name != null)
-                    Provider.of<AppState>(context, listen: false).addPlayer(
-                        Player(name: name)
-                    );
-                },
+              },
             )
           ],
         ),
       ),
+    );
+  }
+
+  Widget playerNameDialog(BuildContext context) {
+    TextEditingController _textFieldController = TextEditingController();
+    return AlertDialog(
+      title: Text("Enter player's name"),
+      content: TextField(
+        controller: _textFieldController,
+        decoration: InputDecoration(),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('CANCEL'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        FlatButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop(_textFieldController.text);
+          },
+        )
+      ],
     );
   }
 }
@@ -73,11 +77,22 @@ class PlayerNameDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = Provider.of<AppState>(context);
+    
     return DecoratedBox(
       decoration: BoxDecoration(color: Colors.lightBlueAccent),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(name),
+        child: Row(
+          children: [
+            Text(name),
+            RaisedButton(
+                child: Icon(Icons.delete),
+                onPressed: () => appState.removePlayer(name),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))
+            )
+          ]
+        ),
       ),
     );
   }

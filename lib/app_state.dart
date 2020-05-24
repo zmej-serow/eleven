@@ -11,5 +11,10 @@ class AppState with ChangeNotifier {
     notifyListeners();
   }
 
+  void removePlayer(String player) {
+    _players.removeWhere((item) => item.name == player);
+    notifyListeners();
+  }
+
   List<Player> get getPlayers => _players;
 }
