@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,30 +17,75 @@ class ScoresState extends State<Scores> {
     final appState = Provider.of<AppState>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Row(
+        appBar: AppBar(
+          backgroundColor: Colors.teal,
+          title: Row(
+            children: [
+              for (var player in appState.getPlayers) Expanded(
+                  child: Text(player.name, textAlign: TextAlign.center)
+              )
+            ],
+          ),
+        ),
+        body:
+
+//        SingleChildScrollView(
+//            scrollDirection: Axis.vertical,
+//            child:
+//            DataTable(
+//                columns: [
+//                  for (var player in appState.getPlayers)
+//                    DataColumn(label: Text(
+//                      player.name,
+//                      textAlign: TextAlign.center,
+//                      style: TextStyle(
+//                        fontSize: 20.0,
+//                        fontWeight: FontWeight.bold,
+//                      )))
+//                ], rows: [
+//              DataRow(
+//                  cells: [
+//                    DataCell(Text("0", textAlign: TextAlign.center,
+//                        style: TextStyle(
+//                          fontSize: 26.0,
+//                          fontWeight: FontWeight.bold,
+//                        ))),
+//                    DataCell(Text("2", textAlign: TextAlign.center,
+//                        style: TextStyle(
+//                          fontSize: 26.0,
+//                          fontWeight: FontWeight.bold,
+//                        ))),
+//                    DataCell(Text("2", textAlign: TextAlign.center,
+//                        style: TextStyle(
+//                          fontSize: 26.0,
+//                          fontWeight: FontWeight.bold,
+//                        ))),
+//                    DataCell(Text("2", textAlign: TextAlign.center,
+//                        style: TextStyle(
+//                          fontSize: 26.0,
+//                          fontWeight: FontWeight.bold,
+//                        ))),
+//                  ]
+//              ),
+//            ])
+//        )
+
+        Row(
           children: [
             for (var player in appState.getPlayers) Expanded(
-                child: Text(player.name, textAlign: TextAlign.center)
+                child: scoresColumn(player, appState)
             )
           ],
-        ),
-      ),
-      body: Row(
-        children: [
-          for (var player in appState.getPlayers) Expanded(
-              child: scoresColumn(player, appState)
-          )
-        ],
-      ),
+        )
+
     );
   }
 
   Widget scoresColumn(Player player, AppState appState) {
     List<int> scores = player.scores;
-    return ListView.builder(
+    return ListView.separated(
       itemCount: scores.length + 1,
+      separatorBuilder: (context, index) => Divider(height: 0),
       itemBuilder: (context, index) {
         if (index == scores.length)
           if (appState.isPlayerCurrent(player))

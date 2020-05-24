@@ -17,6 +17,12 @@ class AppState with ChangeNotifier {
     nextPlayer();
   }
 
+  void newGame() {
+    _players.forEach((player) {player.scores = [];});
+    _currentPlayer = 0;
+    notifyListeners();
+  }
+
   void removePlayer(String playerName) {
     _players.removeWhere((item) => item.name == playerName);
     notifyListeners();

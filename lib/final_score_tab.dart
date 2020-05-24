@@ -17,10 +17,17 @@ class FinalScoresState extends State<FinalScores> {
     List<Player> sortedPlayers = [...appState.getPlayers];
     sortedPlayers.sort((a, b) => b.totalScore().compareTo(a.totalScore()));
 
-    return Column(
-      children: [
-        for (var player in sortedPlayers) finalScore(player)
-      ],
+    return Scaffold(
+        body: Column(
+          children: [
+            for (var player in sortedPlayers) finalScore(player)
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: appState.newGame,
+          backgroundColor: Colors.red,
+          child: Icon(Icons.delete),
+        )
     );
   }
 
