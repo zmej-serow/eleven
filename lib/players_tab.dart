@@ -15,7 +15,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
     final appState = Provider.of<AppState>(context);
 
     return Scaffold(
-      body: ListView.builder(
+      body: ListView.separated(
           itemCount: appState.getPlayers.length,
           itemBuilder: (context, index) {
             return ListTile(
@@ -30,14 +30,14 @@ class PlayersSelectionState extends State<PlayersSelection> {
               onTap: () =>
                   appState.removePlayer(appState.getPlayers[index].name),
             );
-          }
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
+          },
+          separatorBuilder: (context, index) {
+            return Divider(height: 0, thickness: 1);
+          },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createPlayer,
-        child: Icon(Icons.add),
+        child: Icon(Icons.person_add),
       ),
     );
   }
@@ -70,35 +70,3 @@ class PlayersSelectionState extends State<PlayersSelection> {
     );
   }
 }
-
-//class PlayerNameDisplay extends StatelessWidget {
-//  final String name;
-//
-//  const PlayerNameDisplay(this.name);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    final appState = Provider.of<AppState>(context);
-//
-//    return Card(
-//        child: Container(
-//            padding: EdgeInsets.all(10.0),
-//            child: Row(
-//                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                children: [
-//                  Text(name,
-//                    style: TextStyle(
-//                      fontSize: 30.0,
-//                      fontWeight: FontWeight.bold,
-//                    ),
-//                  ),
-//                  FloatingActionButton(
-//                    onPressed: () => appState.removePlayer(name),
-//                    child: Icon(Icons.delete),
-//                  )
-//                ]
-//            )
-//        )
-//    );
-//  }
-//}
