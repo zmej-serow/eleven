@@ -13,8 +13,10 @@ class FinalScoresState extends State<FinalScores> {
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
-    List<Player> sortedPlayers = appState.getPlayers;
+
+    List<Player> sortedPlayers = [...appState.getPlayers];
     sortedPlayers.sort((a, b) => b.totalScore().compareTo(a.totalScore()));
+
     return Column(
       children: [
         for (var player in sortedPlayers) finalScore(player)

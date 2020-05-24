@@ -14,23 +14,30 @@ class PlayersSelectionState extends State<PlayersSelection> {
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
-    return Container(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            for (var player in appState.getPlayers) PlayerNameDisplay(player.name),
-            Padding(padding: EdgeInsets.all(10.0)),
-            RaisedButton(
-              child: Text(
-                "Add player",
-                style: TextStyle(color: Colors.white),
+    return Scaffold(
+      body: ListView.builder(
+          itemCount: appState.getPlayers.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(
+                appState.getPlayers[index].name,
+                style: TextStyle(
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              color: Colors.red,
-              onPressed: createPlayer,
-            )
-          ],
-        ),
+              trailing: Icon(Icons.delete),
+              onTap: () =>
+                  appState.removePlayer(appState.getPlayers[index].name),
+            );
+          }
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: createPlayer,
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -64,34 +71,34 @@ class PlayersSelectionState extends State<PlayersSelection> {
   }
 }
 
-class PlayerNameDisplay extends StatelessWidget {
-  final String name;
-
-  const PlayerNameDisplay(this.name);
-
-  @override
-  Widget build(BuildContext context) {
-    final appState = Provider.of<AppState>(context);
-
-    return Card(
-        child: Container(
-            padding: EdgeInsets.all(10.0),
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(name,
-                    style: TextStyle(
-                      fontSize: 30.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  FloatingActionButton(
-                    onPressed: () => appState.removePlayer(name),
-                    child: Icon(Icons.delete),
-                  )
-                ]
-            )
-        )
-    );
-  }
-}
+//class PlayerNameDisplay extends StatelessWidget {
+//  final String name;
+//
+//  const PlayerNameDisplay(this.name);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    final appState = Provider.of<AppState>(context);
+//
+//    return Card(
+//        child: Container(
+//            padding: EdgeInsets.all(10.0),
+//            child: Row(
+//                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                children: [
+//                  Text(name,
+//                    style: TextStyle(
+//                      fontSize: 30.0,
+//                      fontWeight: FontWeight.bold,
+//                    ),
+//                  ),
+//                  FloatingActionButton(
+//                    onPressed: () => appState.removePlayer(name),
+//                    child: Icon(Icons.delete),
+//                  )
+//                ]
+//            )
+//        )
+//    );
+//  }
+//}
