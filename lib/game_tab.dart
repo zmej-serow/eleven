@@ -21,7 +21,7 @@ class ScoresState extends State<Scores> {
         title: Row(
           children: [
             for (var player in appState.getPlayers) Expanded(
-                child: Text(player.name)
+                child: Text(player.name, textAlign: TextAlign.center)
             )
           ],
         ),
@@ -53,7 +53,14 @@ class ScoresState extends State<Scores> {
             return null;
         else
           return ListTile(
-            title: Text(scores[index].toString()),
+            title: Text(
+              scores[index].toString(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 26.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           );
       },
     );
@@ -73,16 +80,16 @@ class ScoresState extends State<Scores> {
     return AlertDialog(
       title: Text("Enter score"),
       content: TextField(
-        autofocus: true,
-        keyboardType: TextInputType.number,
-        inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(),
-        onSubmitted: (s) => Navigator.of(context).pop(int.tryParse(s))
+          autofocus: true,
+          keyboardType: TextInputType.number,
+          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(),
+          onSubmitted: (s) => Navigator.of(context).pop(int.tryParse(s))
       ),
       actions: [
         FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () => Navigator.of(context).pop()
+            child: Text('CANCEL'),
+            onPressed: () => Navigator.of(context).pop()
         ),
       ],
     );
