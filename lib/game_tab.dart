@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -27,63 +26,24 @@ class ScoresState extends State<Scores> {
             ],
           ),
         ),
-        body:
-
-//        SingleChildScrollView(
-//            scrollDirection: Axis.vertical,
-//            child:
-//            DataTable(
-//                columns: [
-//                  for (var player in appState.getPlayers)
-//                    DataColumn(label: Text(
-//                      player.name,
-//                      textAlign: TextAlign.center,
-//                      style: TextStyle(
-//                        fontSize: 20.0,
-//                        fontWeight: FontWeight.bold,
-//                      )))
-//                ], rows: [
-//              DataRow(
-//                  cells: [
-//                    DataCell(Text("0", textAlign: TextAlign.center,
-//                        style: TextStyle(
-//                          fontSize: 26.0,
-//                          fontWeight: FontWeight.bold,
-//                        ))),
-//                    DataCell(Text("2", textAlign: TextAlign.center,
-//                        style: TextStyle(
-//                          fontSize: 26.0,
-//                          fontWeight: FontWeight.bold,
-//                        ))),
-//                    DataCell(Text("2", textAlign: TextAlign.center,
-//                        style: TextStyle(
-//                          fontSize: 26.0,
-//                          fontWeight: FontWeight.bold,
-//                        ))),
-//                    DataCell(Text("2", textAlign: TextAlign.center,
-//                        style: TextStyle(
-//                          fontSize: 26.0,
-//                          fontWeight: FontWeight.bold,
-//                        ))),
-//                  ]
-//              ),
-//            ])
-//        )
-
-        Row(
-          children: [
-            for (var player in appState.getPlayers) Expanded(
-                child: scoresColumn(player, appState)
+        body: SingleChildScrollView(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                for (var player in appState.getPlayers) Expanded(
+                    child: scoresColumn(player, appState))
+              ]
             )
-          ],
         )
-
     );
   }
 
   Widget scoresColumn(Player player, AppState appState) {
     List<int> scores = player.scores;
     return ListView.separated(
+      shrinkWrap: true,
+      primary: false,
+      reverse: true,
       itemCount: scores.length + 1,
       separatorBuilder: (context, index) => Divider(height: 0),
       itemBuilder: (context, index) {
@@ -91,6 +51,7 @@ class ScoresState extends State<Scores> {
           if (appState.isPlayerCurrent(player))
             return ListTile(
                 title: FloatingActionButton(
+                  mini: true,
                   onPressed: addScore,
                   child: Icon(Icons.add),
                 )
@@ -103,7 +64,7 @@ class ScoresState extends State<Scores> {
               scores[index].toString(),
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 26.0,
+                fontSize: 28.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
