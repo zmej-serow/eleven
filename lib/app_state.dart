@@ -5,11 +5,9 @@ class AppState with ChangeNotifier {
   AppState();
 
   List<Player> _players = [];
-  List<Player> _sortedPlayers = [];
   int _currentPlayer = 0;
 
   List<Player> get getPlayers => _players;
-  List<Player> get sortedPlayers => _sortedPlayers;
 
   void addPlayer(Player player) {
     _players.add(player);
@@ -18,8 +16,6 @@ class AppState with ChangeNotifier {
 
   void addScore(int score) {
     _players[_currentPlayer].addScore(score);
-    _sortedPlayers = [..._players];
-    _sortedPlayers.sort((a, b) => b.totalScore().compareTo(a.totalScore()));
     nextPlayer();
   }
 
@@ -37,7 +33,6 @@ class AppState with ChangeNotifier {
 
   void removePlayer(String playerName) {
     _players.removeWhere((item) => item.name == playerName);
-    _sortedPlayers.removeWhere((item) => item.name == playerName);
     notifyListeners();
   }
 
