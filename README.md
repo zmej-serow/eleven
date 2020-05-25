@@ -22,7 +22,5 @@ initial release.
 
 - 0.0.2:
 internal improvements;
-
 added confirmation dialog to clear the scores;
-
 added ability to edit already entered scores.
