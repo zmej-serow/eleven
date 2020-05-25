@@ -2,7 +2,7 @@
 
 Weekend project: a score counter for games like Scrabble, written in Flutter/Dart.
 
-![](https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true)
+[<img src="https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true" width="250"/>](https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true)
 
 ## Features
 - easy to use, native interface;
