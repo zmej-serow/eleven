@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -14,17 +15,14 @@ class FinalScoresState extends State<FinalScores> {
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
-    List<Player> sortedPlayers = [...appState.getPlayers];
-    sortedPlayers.sort((a, b) => b.totalScore().compareTo(a.totalScore()));
-
     return Scaffold(
         body: Column(
           children: [
-            for (var player in sortedPlayers) finalScore(player)
+            for (var player in appState.sortedPlayers) finalScore(player)
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: appState.newGame,
+          onPressed: newGame,
           backgroundColor: Colors.red,
           child: Icon(Icons.delete),
         )
@@ -39,20 +37,43 @@ class FinalScoresState extends State<FinalScores> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(player.name,
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      style: bold25()
                   ),
                   Text(player.totalScore().toString(),
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      style: bold25()
                   ),
                 ]
             )
         )
+    );
+  }
+
+  void newGame() async {
+    bool newGame = await showDialog(
+        context: this.context,
+        child: newGameDialog(context)
+    );
+    if (newGame)
+      Provider.of<AppState>(context, listen: false).newGame();
+  }
+
+  Widget newGameDialog(BuildContext context) {
+    return AlertDialog(
+      title: Text("Are you sure?"),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('CANCEL'),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        FlatButton(
+          child: Text('OK'),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
+      ],
     );
   }
 }

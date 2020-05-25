@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:eleven/app_state.dart';
-import 'package:eleven/game_tab.dart';
-import 'package:eleven/players_tab.dart';
-import 'package:eleven/final_score_tab.dart';
+import 'package:eleven/tabs/game_tab.dart';
+import 'package:eleven/tabs/players_tab.dart';
+import 'package:eleven/tabs/final_score_tab.dart';
 
 void main() {
   runApp(ElevenScoreKeeper());

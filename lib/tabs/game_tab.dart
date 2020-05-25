@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -26,27 +27,24 @@ class ScoresState extends State<Scores> {
                 children: [
                   for (var player in appState.getPlayers) Expanded(
                       child: Text(
-                        player.name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
-                        ),
+                          player.name,
+                          textAlign: TextAlign.center,
+                          style: bold25()
                       )
                   )
                 ],
               ),
             ),
             SliverToBoxAdapter(
-              child: SingleChildScrollView(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    for (var player in appState.getPlayers) Expanded(
-                        child: scoresColumn(player, appState))
-                  ]
+                child: SingleChildScrollView(
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          for (var player in appState.getPlayers) Expanded(
+                              child: scoresColumn(player, appState))
+                        ]
+                    )
                 )
-              )
             )
           ]
       );
@@ -74,35 +72,47 @@ class ScoresState extends State<Scores> {
             return null;
         else
           return ListTile(
+            onLongPress: () => editScore(player, index, scores[index]),
             title: Text(
-              scores[index].toString(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 28.0,
-                fontWeight: FontWeight.bold,
-              ),
+                scores[index].toString(),
+                textAlign: TextAlign.center,
+                style: bold25()
             ),
           );
       },
     );
   }
 
+  void editScore(Player player, int index, int oldScore) async {
+    int newScore = await showDialog(
+        context: this.context,
+        child: scoreDialog(context, oldScore)
+    );
+    if (newScore != null) {
+      Provider.of<AppState>(context, listen: false).editScore(player, index, newScore);
+    }
+  }
+
   void addScore() async {
     int score = await showDialog(
         context: this.context,
-        child: addScoreDialog(context)
+        child: scoreDialog(context, null)
     );
     if (score != null) {
       Provider.of<AppState>(context, listen: false).addScore(score);
     }
   }
 
-  Widget addScoreDialog(BuildContext context) {
+  Widget scoreDialog(BuildContext context, int score) {
+    String dialogText = score == null ? "Enter score" : "Edit score";
+    TextEditingController initialValue = score == null ? null : TextEditingController(text: score.toString());
+
     return AlertDialog(
-      title: Text("Enter score"),
+      title: Text(dialogText),
       content: TextField(
+          controller: initialValue,
           autofocus: true,
-          keyboardType: TextInputType.number,
+          keyboardType: TextInputType.phone,
           inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
           decoration: InputDecoration(),
           onSubmitted: (s) => Navigator.of(context).pop(int.tryParse(s))

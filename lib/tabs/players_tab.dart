@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -16,24 +17,23 @@ class PlayersSelectionState extends State<PlayersSelection> {
 
     return Scaffold(
       body: ListView.separated(
-          itemCount: appState.getPlayers.length,
-          itemBuilder: (context, index) {
-            return ListTile(
+        itemCount: appState.getPlayers.length,
+        itemBuilder: (context, index) {
+          return ListTile(
               title: Text(
                 appState.getPlayers[index].name,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: bold25(),
               ),
               trailing: Icon(Icons.delete),
               onTap: () =>
-                  appState.removePlayer(appState.getPlayers[index].name),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Divider(height: 0, thickness: 1);
-          },
+                  Provider.of<AppState>(context, listen: false).removePlayer(
+                      appState.getPlayers[index].name
+                  )
+          );
+        },
+        separatorBuilder: (context, index) {
+          return Divider(height: 0, thickness: 1);
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createPlayer,
@@ -48,7 +48,9 @@ class PlayersSelectionState extends State<PlayersSelection> {
         child: playerNameDialog(context)
     );
     if (name != null && name != "")
-      Provider.of<AppState>(context, listen: false).addPlayer(Player(name, []));
+      Provider.of<AppState>(context, listen: false).addPlayer(
+          Player(name, [])
+      );
   }
 
   Widget playerNameDialog(BuildContext context) {
