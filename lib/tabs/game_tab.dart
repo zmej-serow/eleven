@@ -41,7 +41,7 @@ class ScoresState extends State<Scores> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           for (var player in appState.getPlayers) Expanded(
-                              child: scoresColumn(player, appState))
+                              child: scoresColumn(player))
                         ]
                     )
                 )
@@ -50,8 +50,10 @@ class ScoresState extends State<Scores> {
       );
   }
 
-  Widget scoresColumn(Player player, AppState appState) {
+  Widget scoresColumn(Player player) {
+    final appState = Provider.of<AppState>(context);
     List<int> scores = player.scores;
+
     return ListView.separated(
       shrinkWrap: true,
       primary: false,

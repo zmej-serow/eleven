@@ -37,6 +37,7 @@ class AppState with ChangeNotifier {
 
   void removePlayer(String playerName) {
     _players.removeWhere((item) => item.name == playerName);
+    _sortedPlayers.removeWhere((item) => item.name == playerName);
     notifyListeners();
   }
 
