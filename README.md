@@ -5,7 +5,7 @@ Weekend project: a score counter for games like Scrabble, written in Flutter/Dar
 [<img src="https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true" width="250"/>](https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true)
 
 ## Features
-- absolutely free and open-source. MIT license.
+- absolutely free and open-source. BSD-3-clause license.
 
 - easy to use, native interface;
 
