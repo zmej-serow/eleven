@@ -61,7 +61,7 @@ class AppState with ChangeNotifier {
 
     if (load) {
       _currentPlayer = prefs.getInt(_sharedPrefsCurrentPlayer) ?? 0;
-      var ps = json.decode(prefs.getString(_sharedPrefsPlayers)) ?? null;
+      var ps = json.decode(prefs.getString(_sharedPrefsPlayers) ?? "{}");
       _players = List<Player>.from(ps.map((i) => Player.fromJson(i)));
     } else {
       await prefs.setString(_sharedPrefsPlayers, json.encode(_players));
