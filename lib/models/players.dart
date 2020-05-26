@@ -4,6 +4,17 @@ class Player {
 
   Player(this.name, this.scores);
 
+  Map toJson() => {
+    'name': name,
+    'scores': scores,
+  };
+
+  factory Player.fromJson(var json) {
+    String n = json['name'];
+    List<int> s = List<int>.from(json['scores']);
+    return Player(n, s);
+  }
+
   void addScore(score) {
     this.scores.add(score);
   }
