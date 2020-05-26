@@ -19,15 +19,13 @@ Weekend project: a score counter for games like Scrabble, written in Flutter/Dar
 - voice recognition. After all, it's called "eleven" after [this funny gag](https://www.youtube.com/watch?v=G2Y0oqZOyl0). :)
 
 ## History
-- 0.0.1:
-initial release.
+### 0.0.1:
+- initial release.
 
-- 0.0.2:
-internal improvements;
+### 0.0.2:
+- internal improvements;
+- added confirmation dialog to clear the scores;
+- added ability to edit already entered scores.
 
-added confirmation dialog to clear the scores;
-
-added ability to edit already entered scores.
-
-- 1.0.0:
-persistent players and scores.
+### 1.0.0:
+- persistent players and scores.
