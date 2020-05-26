@@ -1,6 +1,6 @@
 # Eleven!
 
-Weekend project: a score counter for games like Scrabble, written in Flutter/Dart.
+Weekend project: a score counter (leaderboard) for games like Scrabble, written in Flutter/Dart.
 
 [<img src="https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true" width="250"/>](https://github.com/zmej-serow/eleven/blob/master/eleven.gif?raw=true)
 
