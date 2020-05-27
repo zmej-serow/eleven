@@ -9,6 +9,8 @@ Weekend project: a score counter (leaderboard) for games like Scrabble, written 
 
 - easy to use, native interface;
 
+- you can ask program to multiply numbers for you, i.e. `3*18` will result in `54`.
+
 - ability to add or remove players during the game;
 
 - intrigues players till the end: final score isn't displayed until you explicitly want it.
@@ -29,3 +31,6 @@ Weekend project: a score counter (leaderboard) for games like Scrabble, written 
 
 ### 1.0.0:
 - persistent players and scores.
+
+### 1.1.0:
+- added math to input parsing.

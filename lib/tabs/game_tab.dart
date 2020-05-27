@@ -105,6 +105,10 @@ class ScoresState extends State<Scores> {
     }
   }
 
+  int parseInput(input) {
+    return input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1));
+  }
+
   Widget scoreDialog(BuildContext context, int score) {
     String dialogText = score == null ? "Enter score" : "Edit score";
     TextEditingController initialValue = score == null ? null : TextEditingController(text: score.toString());
@@ -115,9 +119,9 @@ class ScoresState extends State<Scores> {
           controller: initialValue,
           autofocus: true,
           keyboardType: TextInputType.phone,
-          inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+          inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
           decoration: InputDecoration(),
-          onSubmitted: (s) => Navigator.of(context).pop(int.tryParse(s))
+          onSubmitted: (input) => Navigator.of(context).pop(parseInput(input))
       ),
       actions: [
         FlatButton(
