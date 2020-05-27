@@ -106,7 +106,9 @@ class ScoresState extends State<Scores> {
   }
 
   int parseInput(input) {
-    return input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1));
+    return input.contains(RegExp(r"\d"))
+        ? input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1))
+        : null;
   }
 
   Widget scoreDialog(BuildContext context, int score) {
