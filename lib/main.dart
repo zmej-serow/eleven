@@ -58,6 +58,9 @@ class _MainScreenState extends State<MainScreen> {
             FinalScores(),
           ],
         ),
+        drawer: Drawer(
+            child: Text("Prefs here")
+        ),
       ),
     );
   }
