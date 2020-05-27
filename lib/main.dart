@@ -27,10 +27,10 @@ class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  MainScreenState createState() => MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -59,9 +59,13 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         drawer: Drawer(
-            child: Text("Prefs here")
+            child: preferencesDrawer()
         ),
       ),
     );
+  }
+
+  Widget preferencesDrawer() {
+    return Text("qqq");
   }
 }
