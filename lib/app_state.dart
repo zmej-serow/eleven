@@ -10,10 +10,44 @@ class AppState with ChangeNotifier {
     _load();
   }
 
+  // defaults
   List<Player> _players = [];
   int _currentPlayer = 0;
+  Map _prefs = {};
 
+  static Map _defaultPrefs = {
+    "textSize": 25.0,
+    "brightness": Brightness.dark,
+    "primaryColor": Colors.lightBlue[800],
+    "accentColor": Colors.cyan[600],
+  };
+  ThemeData _themeData = ThemeData(
+    brightness: _defaultPrefs['brightness'],
+    primaryColor: _defaultPrefs['primaryColor'],
+    accentColor: _defaultPrefs['accentColor'],
+    textTheme: TextTheme(
+      headline5: TextStyle(
+          fontSize: _defaultPrefs['textSize'],
+          fontWeight: FontWeight.bold
+      ),
+    ),
+  );
+
+  // getters
   List<Player> get getPlayers => _players;
+  Map get prefs => _prefs;
+  ThemeData get theme => _themeData;
+
+  // methods
+  void themeTextSize(double size) {
+    _prefs['textSize'] = size;
+    _themeData = _themeData.copyWith(
+      textTheme: TextTheme(
+        headline5: TextStyle(fontSize: size, fontWeight: FontWeight.bold),
+      ),
+    );
+    _save();
+  }
 
   void addPlayer(Player player) {
     _players.add(player);
@@ -52,22 +86,37 @@ class AppState with ChangeNotifier {
     return _players.indexOf(player) == _currentPlayer;
   }
 
+  // shared preferences
   void _load() => _store(load: true);
   void _save() => _store();
   void _store({bool load = false}) async {
-    const String _sharedPrefsCurrentPlayer = 'elevenCurrentPlayer';
-    const String _sharedPrefsPlayers = 'elevenPlayers';
-    final prefs = await SharedPreferences.getInstance();
+    const String _spCurrentPlayer = 'elevenCurrentPlayer';
+    const String _spPlayers = 'elevenPlayers';
+    const String _spPrefs = 'elevenPreferences';
+    final preferences = await SharedPreferences.getInstance();
 
     if (load) {
-      _currentPlayer = prefs.getInt(_sharedPrefsCurrentPlayer) ?? 0;
-      var ps = json.decode(prefs.getString(_sharedPrefsPlayers) ?? "{}");
-      _players = List<Player>.from(ps.map((i) => Player.fromJson(i)));
+      _currentPlayer = preferences.getInt(_spCurrentPlayer) ?? 0;
+      var ps = json.decode(preferences.getString(_spPlayers) ?? "{}");
+      _players = ps.isEmpty
+          ? []
+          : List<Player>.from(ps.map((i) => Player.fromJson(i)));
+      var pr = preferences.getString(_spPrefs) ?? "";
+      _prefs = pr.isEmpty
+          ? _defaultPrefs
+          : deserialized(pr);
     } else {
-      await prefs.setString(_sharedPrefsPlayers, json.encode(_players));
-      await prefs.setInt(_sharedPrefsCurrentPlayer, _currentPlayer);
+      await preferences.setInt(_spCurrentPlayer, _currentPlayer);
+      await preferences.setString(_spPlayers, json.encode(_players));
+      await preferences.setString(_spPrefs, _prefs.toString());
     }
-
     notifyListeners();
+  }
+
+  Map deserialized(String prefs) {
+    // {textSize: 31.966159119897963, brightness: Brightness.dark, primaryColor: Color(0xff0277bd), accentColor: Color(0xff00acc1)}
+    print("incoming prefs: ${prefs.runtimeType} / ${prefs}");
+
+    return _defaultPrefs;
   }
 }

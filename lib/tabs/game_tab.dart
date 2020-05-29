@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -20,8 +19,9 @@ class ScoresState extends State<Scores> {
       CustomScrollView(
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               pinned: true,
-              backgroundColor: Colors.teal,
+              backgroundColor: Theme.of(context).accentColor,
               titleSpacing: 0,
               title: Row(
                 children: [
@@ -29,7 +29,7 @@ class ScoresState extends State<Scores> {
                       child: Text(
                           player.name,
                           textAlign: TextAlign.center,
-                          style: bold25()
+                          style: Theme.of(context).textTheme.headline5,
                       )
                   )
                 ],
@@ -78,7 +78,7 @@ class ScoresState extends State<Scores> {
             title: Text(
                 scores[index].toString(),
                 textAlign: TextAlign.center,
-                style: bold25()
+                style: Theme.of(context).textTheme.headline5,
             ),
           );
       },

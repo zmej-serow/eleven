@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -22,7 +21,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
           return ListTile(
               title: Text(
                 appState.getPlayers[index].name,
-                style: bold25(),
+                style: Theme.of(context).textTheme.headline5,
               ),
               trailing: Icon(Icons.delete),
               onTap: () =>

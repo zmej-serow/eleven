@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:eleven/styles.dart';
 import 'package:eleven/app_state.dart';
 import 'package:eleven/models/players.dart';
 
@@ -39,10 +38,10 @@ class FinalScoresState extends State<FinalScores> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(player.name,
-                      style: bold25()
+                      style: Theme.of(context).textTheme.headline5,
                   ),
                   Text(player.totalScore().toString(),
-                      style: bold25()
+                      style: Theme.of(context).textTheme.headline5,
                   ),
                 ]
             )
