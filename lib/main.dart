@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import 'package:eleven/app_state.dart';
 import 'package:eleven/tabs/game_tab.dart';
@@ -86,34 +87,55 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.format_size),
+            leading: Text("Text size"),
             title: Slider(
-              value: appState.prefs['textSize'] ?? 40,
+              value: appState.prefs['textSize'],
               min: 18,
               max: 40,
               onChanged: (size) => Provider.of<AppState>(context, listen: false).themeTextSize(size),
             ),
-            onTap: (){
-              Navigator.of(context).pop();
-            },
+            onTap: () => Navigator.of(context).pop()
+          ),
+          SwitchListTile(
+            title: Text("Dark mode"),
+            value: appState.prefs['brightness'] == Brightness.dark ? true : false,
+            onChanged: (state) => Provider.of<AppState>(context, listen: false).flipDark(state)
           ),
           ListTile(
-            title: Text("Main color"),
-            onTap: (){
-              Navigator.of(context).pop();
-            },
+            title: Text("Primary color"),
+            onTap: () => colorPicker("primaryColor")
           ),
           ListTile(
-            title: Text("Secondary color"),
-            onTap: (){
-              Navigator.of(context).pop();
-            },
+            title: Text("Accent color"),
+            onTap: () => colorPicker("accentColor")
           ),
           ListTile(
             title: Text("Interface language"),
-            onTap: (){
-              Navigator.of(context).pop();
-            },
+            onTap: () => Navigator.of(context).pop()
+          ),
+        ],
+      ),
+    );
+  }
+
+  void colorPicker(kind) async {
+    final appState = Provider.of<AppState>(context);  // косяк.
+    String text = kind == "primaryColor" ? "Primary" : "Accent";
+
+    return showDialog(
+      context: context,
+      child: AlertDialog(
+        title: Text('$text color:'),
+        content: SingleChildScrollView(
+          child: MaterialPicker(
+            pickerColor: appState.prefs[kind],
+            onColorChanged: (c) => Provider.of<AppState>(context, listen: false).setColor(kind, c),
+          ),
+        ),
+        actions: [
+          FlatButton(
+            child: const Text('Ok'),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ],
       ),

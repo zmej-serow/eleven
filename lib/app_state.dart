@@ -13,25 +13,13 @@ class AppState with ChangeNotifier {
   // defaults
   List<Player> _players = [];
   int _currentPlayer = 0;
-  Map _prefs = {};
-
-  static Map _defaultPrefs = {
+  ThemeData _themeData;
+  Map _prefs = {
     "textSize": 25.0,
     "brightness": Brightness.dark,
-    "primaryColor": Colors.lightBlue[800],
-    "accentColor": Colors.cyan[600],
+    "primaryColor": Color(0xff0277bd),
+    "accentColor": Color(0xff42a5f5),
   };
-  ThemeData _themeData = ThemeData(
-    brightness: _defaultPrefs['brightness'],
-    primaryColor: _defaultPrefs['primaryColor'],
-    accentColor: _defaultPrefs['accentColor'],
-    textTheme: TextTheme(
-      headline5: TextStyle(
-          fontSize: _defaultPrefs['textSize'],
-          fontWeight: FontWeight.bold
-      ),
-    ),
-  );
 
   // getters
   List<Player> get getPlayers => _players;
@@ -41,9 +29,29 @@ class AppState with ChangeNotifier {
   // methods
   void themeTextSize(double size) {
     _prefs['textSize'] = size;
-    _themeData = _themeData.copyWith(
+    _updateTheme();
+  }
+
+  void flipDark(s) {
+    _prefs['brightness'] = s ? Brightness.dark : Brightness.light;
+    _updateTheme();
+  }
+
+  void setColor(String kind, c) {
+    _prefs[kind] = c;
+    _updateTheme();
+  }
+
+  void _updateTheme() {
+    _themeData = ThemeData(
+      brightness: _prefs['brightness'],
+      primaryColor: _prefs['primaryColor'],
+      accentColor: _prefs['accentColor'],
       textTheme: TextTheme(
-        headline5: TextStyle(fontSize: size, fontWeight: FontWeight.bold),
+        headline5: TextStyle(
+            fontSize: _prefs['textSize'],
+            fontWeight: FontWeight.bold
+        ),
       ),
     );
     _save();
@@ -101,22 +109,32 @@ class AppState with ChangeNotifier {
       _players = ps.isEmpty
           ? []
           : List<Player>.from(ps.map((i) => Player.fromJson(i)));
-      var pr = preferences.getString(_spPrefs) ?? "";
-      _prefs = pr.isEmpty
-          ? _defaultPrefs
-          : deserialized(pr);
+      var pr = preferences.getStringList(_spPrefs) ?? [];
+      if (pr.isNotEmpty) _prefs = deserialize(pr);
+      _updateTheme();
     } else {
       await preferences.setInt(_spCurrentPlayer, _currentPlayer);
       await preferences.setString(_spPlayers, json.encode(_players));
-      await preferences.setString(_spPrefs, _prefs.toString());
+      await preferences.setStringList(_spPrefs, serialize(_prefs));
     }
     notifyListeners();
   }
 
-  Map deserialized(String prefs) {
-    // {textSize: 31.966159119897963, brightness: Brightness.dark, primaryColor: Color(0xff0277bd), accentColor: Color(0xff00acc1)}
-    print("incoming prefs: ${prefs.runtimeType} / ${prefs}");
+  Map deserialize(List<String> prefs) {
+    return {
+      'textSize': double.tryParse(prefs[0]),
+      'brightness': prefs[1].contains('dark') ? Brightness.dark : Brightness.light,
+      'primaryColor': Color(int.tryParse(prefs[2])),
+      'accentColor': Color(int.tryParse(prefs[3])),
+    };
+  }
 
-    return _defaultPrefs;
+  List<String> serialize(Map prefs) {
+    return [
+      prefs['textSize'].toString(),
+      prefs['brightness'].toString(),
+      prefs['primaryColor'].value.toString(),
+      prefs['accentColor'].value.toString(),
+    ];
   }
 }
