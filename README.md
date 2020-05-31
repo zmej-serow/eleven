@@ -18,6 +18,8 @@ Weekend project: a score counter (leaderboard) for games like Scrabble, written 
 ## TO-DO
 - add timer for blitz games.
 
+- i18n.
+
 - voice recognition. After all, it's called "eleven" after [this funny gag](https://www.youtube.com/watch?v=G2Y0oqZOyl0). :)
 
 ## History
@@ -34,3 +36,6 @@ Weekend project: a score counter (leaderboard) for games like Scrabble, written 
 
 ### 1.1.0:
 - added math to input parsing.
+
+### 1.2.0:
+- added preferences panel, where user can select text size, app colors and switch dark mode off and on.
