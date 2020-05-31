@@ -119,10 +119,6 @@ class MainScreenState extends State<MainScreen> {
               ),
               onTap: () => colorPicker("accentColor")
           ),
-          ListTile(
-              title: Text("Interface language"),
-              onTap: () => Navigator.of(context).pop()
-          ),
         ],
       ),
     );
