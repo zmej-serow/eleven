@@ -19,9 +19,9 @@ class ElevenScoreKeeper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: Provider.of<AppState>(context, listen: true).theme,
-        home: MainScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: Provider.of<AppState>(context, listen: true).theme,
+      home: MainScreen(),
     );
   }
 }
@@ -87,54 +87,64 @@ class MainScreenState extends State<MainScreen> {
             ),
           ),
           ListTile(
-            leading: Text("Text size"),
-            title: Slider(
-              value: appState.prefs['textSize'],
-              min: 18,
-              max: 40,
-              onChanged: (size) => Provider.of<AppState>(context, listen: false).themeTextSize(size),
-            ),
-            onTap: () => Navigator.of(context).pop()
+              leading: Text("Text size"),
+              title: Slider(
+                value: appState.prefs['textSize'],
+                min: 18,
+                max: 40,
+                onChanged: (size) => Provider.of<AppState>(context, listen: false).themeTextSize(size),
+              ),
+              onTap: () => Navigator.of(context).pop()
           ),
           SwitchListTile(
-            title: Text("Dark mode"),
-            value: appState.prefs['brightness'] == Brightness.dark ? true : false,
-            onChanged: (state) => Provider.of<AppState>(context, listen: false).flipDark(state)
+              title: Text("Dark mode"),
+              value: appState.prefs['brightness'] == Brightness.dark ? true : false,
+              onChanged: (state) => Provider.of<AppState>(context, listen: false).flipDark(state)
           ),
           ListTile(
-            title: Text("Primary color"),
-            onTap: () => colorPicker("primaryColor")
+              title: Text("Primary color"),
+              trailing: Container(
+                width: 20.0,
+                height: 20.0,
+                color: appState.prefs['primaryColor'],
+              ),
+              onTap: () => colorPicker("primaryColor")
           ),
           ListTile(
-            title: Text("Accent color"),
-            onTap: () => colorPicker("accentColor")
+              title: Text("Accent color"),
+              trailing: Container(
+                width: 20.0,
+                height: 20.0,
+                color: appState.prefs['accentColor'],
+              ),
+              onTap: () => colorPicker("accentColor")
           ),
           ListTile(
-            title: Text("Interface language"),
-            onTap: () => Navigator.of(context).pop()
+              title: Text("Interface language"),
+              onTap: () => Navigator.of(context).pop()
           ),
         ],
       ),
     );
   }
 
-  void colorPicker(kind) async {
-    final appState = Provider.of<AppState>(context);  // косяк.
-    String text = kind == "primaryColor" ? "Primary" : "Accent";
-
-    return showDialog(
-      context: context,
+  void colorPicker(kind) {
+    final appState = Provider.of<AppState>(context, listen: false);
+    String colorType = kind == "primaryColor" ? "primary" : "accent";
+    showDialog(
+      context: this.context,
       child: AlertDialog(
-        title: Text('$text color:'),
+        title: Text('Select $colorType color:'),
         content: SingleChildScrollView(
           child: MaterialPicker(
+            enableLabel: true,
             pickerColor: appState.prefs[kind],
             onColorChanged: (c) => Provider.of<AppState>(context, listen: false).setColor(kind, c),
           ),
         ),
         actions: [
           FlatButton(
-            child: const Text('Ok'),
+            child: Text('Ok'),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],
