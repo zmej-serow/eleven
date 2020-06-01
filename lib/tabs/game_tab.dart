@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -123,7 +124,11 @@ class ScoresState extends State<Scores> {
           keyboardType: TextInputType.phone,
           inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
           decoration: InputDecoration(),
-          onSubmitted: (input) => Navigator.of(context).pop(parseInput(input))
+          onSubmitted: (input) {
+            Timer t = startTimeout();
+            print(t);
+            Navigator.of(context).pop(parseInput(input));
+          }
       ),
       actions: [
         FlatButton(
@@ -132,5 +137,12 @@ class ScoresState extends State<Scores> {
         ),
       ],
     );
+  }
+
+  Timer startTimeout() {
+    var duration = Duration(seconds: 3);
+    return Timer(duration, () {
+      SystemSound.play(SystemSoundType.click);
+    });
   }
 }
