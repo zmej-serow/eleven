@@ -77,14 +77,14 @@ class MainScreenState extends State<MainScreen> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            child: Text("Preferences", style: TextStyle(color: Colors.black, fontSize: 30)),
+            child: Text("Preferences", style: TextStyle(color: Colors.white, fontSize: 30)),
             decoration: BoxDecoration(
-              color: Colors.cyan
-//                image: DecorationImage(
-//                    image: AssetImage("images/preferences.jpg"),
-//                    fit: BoxFit.fill,
-//                    alignment: Alignment.topCenter
-//                )
+              color: Colors.cyan,
+              image: DecorationImage(
+                  image: AssetImage("images/preferences.jpg"),
+                  fit: BoxFit.fill,
+                  alignment: Alignment.topCenter
+              ),
             ),
           ),
           ListTile(
