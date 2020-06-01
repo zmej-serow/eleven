@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:numberpicker/numberpicker.dart';
 
 import 'package:eleven/app_state.dart';
 import 'package:eleven/tabs/game_tab.dart';
@@ -77,7 +78,7 @@ class MainScreenState extends State<MainScreen> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            child: Text("Preferences", style: TextStyle(color: Colors.white, fontSize: 30)),
+            child: Text("Eleven!", style: TextStyle(color: Colors.white, fontSize: 40)),
             decoration: BoxDecoration(
               color: Colors.cyan,
               image: DecorationImage(
@@ -120,13 +121,41 @@ class MainScreenState extends State<MainScreen> {
               ),
               onTap: () => colorPicker("accentColor")
           ),
+          SwitchListTile(
+              title: Text("Blitz mode"),
+              value: appState.blitz,
+              onChanged: (state) => Provider.of<AppState>(context, listen: false).flipBlitz(state)
+          ),
+          ListTile(
+              title: Text("Blitz round timer"),
+              trailing: Text("${appState.timerDuration.inMinutes.toString()} min"),
+              onTap: () async => appState.setBlitzDuration(await blitzDurationPicker(appState.timerDuration))
+          ),
         ],
       ),
     );
   }
 
+  Future<Duration> blitzDurationPicker(Duration duration) async {
+    int newDurationInMinutes = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return NumberPickerDialog.integer(
+            minValue: 1,
+            maxValue: 10,
+            title: Text("Pick blitz round duration:"),
+            initialIntegerValue: duration.inMinutes,
+          );
+        }
+    );
+    return newDurationInMinutes == null
+        ? duration
+        : Duration(minutes: newDurationInMinutes);
+  }
+
   void colorPicker(kind) {
     final appState = Provider.of<AppState>(context, listen: false);
+
     String colorType = kind == "primaryColor" ? "primary" : "accent";
     showDialog(
       context: this.context,

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:audiofileplayer/audiofileplayer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:eleven/models/players.dart';
@@ -20,16 +22,32 @@ class AppState with ChangeNotifier {
     "primaryColor": Color(0xff0277bd),
     "accentColor": Color(0xff42a5f5),
   };
+  bool _blitz = false;
+  Timer _timer;
+  Duration _timerDuration = Duration(minutes: 1);
+  Audio _timerAlarmSound = Audio.load('sounds/Drone.wav');  // TODO: don't forget to .dispose() before loading new sound
 
   // getters
   List<Player> get getPlayers => _players;
   Map get prefs => _prefs;
+  bool get blitz => _blitz;
+  Duration get timerDuration => _timerDuration;
   ThemeData get theme => _themeData;
 
   // methods
   void themeTextSize(double size) {
     _prefs['textSize'] = size;
     _updateTheme();
+  }
+
+  void setBlitzDuration(Duration duration) {
+    _timerDuration = duration;
+    notifyListeners();
+  }
+
+  void flipBlitz(s) {
+    _blitz = s;
+    notifyListeners();
   }
 
   void flipDark(s) {
@@ -63,7 +81,13 @@ class AppState with ChangeNotifier {
   }
 
   void addScore(int score) {
+    if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);
+    if (_blitz) {
+      _timer = Timer(_timerDuration, () => _timerAlarmSound.play());
+    } else {
+      _timer = null;
+    }
     nextPlayer();
   }
 

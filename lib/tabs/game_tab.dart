@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +74,7 @@ class ScoresState extends State<Scores> {
             return null;
         else
           return ListTile(
-            onLongPress: () => editScore(player, index, scores[index]),
+            onLongPress: () => scoreUpdate(player, index, scores[index]),
             title: Text(
                 scores[index].toString(),
                 textAlign: TextAlign.center,
@@ -86,23 +85,18 @@ class ScoresState extends State<Scores> {
     );
   }
 
-  void editScore(Player player, int index, int oldScore) async {
-    int newScore = await showDialog(
+  void addScore() async => scoreUpdate(null, null, null);
+  void scoreUpdate(Player player, int index, int score) async {
+    int enteredScore = await showDialog(
         context: this.context,
-        child: scoreDialog(context, oldScore)
+        child: scoreDialog(context, score ?? null)
     );
-    if (newScore != null) {
-      Provider.of<AppState>(context, listen: false).editScore(player, index, newScore);
-    }
-  }
-
-  void addScore() async {
-    int score = await showDialog(
-        context: this.context,
-        child: scoreDialog(context, null)
-    );
-    if (score != null) {
-      Provider.of<AppState>(context, listen: false).addScore(score);
+    if (enteredScore != null) {
+      if (player == null) {
+        Provider.of<AppState>(context, listen: false).addScore(enteredScore);
+      } else {
+        Provider.of<AppState>(context, listen: false).editScore(player, index, enteredScore);
+      }
     }
   }
 
@@ -125,8 +119,6 @@ class ScoresState extends State<Scores> {
           inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
           decoration: InputDecoration(),
           onSubmitted: (input) {
-            Timer t = startTimeout();
-            print(t);
             Navigator.of(context).pop(parseInput(input));
           }
       ),
@@ -137,12 +129,5 @@ class ScoresState extends State<Scores> {
         ),
       ],
     );
-  }
-
-  Timer startTimeout() {
-    var duration = Duration(seconds: 3);
-    return Timer(duration, () {
-      SystemSound.play(SystemSoundType.click);
-    });
   }
 }
