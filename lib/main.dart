@@ -137,6 +137,20 @@ class MainScreenState extends State<MainScreen> {
               trailing: Text("${appState.timerDuration.inMinutes.toString()} min"),
               onTap: () async => appState.timerDuration = await blitzDurationPicker(appState.timerDuration)
           ),
+          ListTile(
+            title: Text("Blitz alarm sound"),
+            trailing: DropdownButton<String>(
+              underline: SizedBox(),
+              value: appState.timerAlarmSound,
+              items: <String>['Foghorn', 'Huge temple bell', 'Siren', 'Temple bell'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (x) => appState.timerAlarmSound = x,
+            )
+        ),
         ],
       ),
     );

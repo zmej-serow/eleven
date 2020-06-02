@@ -19,7 +19,7 @@ class AppState with ChangeNotifier {
   bool _blitz = false;
   Timer _timer;
   Duration _timerDuration = Duration(minutes: 1);
-  String _timerAlarmSound = 'sounds/Drone.wav';
+  String _timerAlarmSound = 'sounds/Foghorn.mp3';
   Map _themePrefs = {
     "textSize": 25.0,
     "brightness": Brightness.dark,
@@ -31,8 +31,16 @@ class AppState with ChangeNotifier {
   List<Player> get getPlayers => _players;
   Map get prefs => _themePrefs;
   bool get blitz => _blitz;
+  String get timerAlarmSound => _timerAlarmSound.substring( // todo: fix this shit with regexp pattern matching?
+      _timerAlarmSound.lastIndexOf("/")+1, _timerAlarmSound.lastIndexOf(".")
+  );
   Duration get timerDuration => _timerDuration;
   ThemeData get theme => _themeData;
+
+  set timerAlarmSound(String sound) {
+    _timerAlarmSound = "sounds/$sound.mp3";
+    _save();    // TODO: don't forget to save timer value, cancel it and restart with old value and new sound!
+  }
 
   set timerDuration(Duration duration) {
     _timerDuration = duration;
@@ -84,7 +92,7 @@ class AppState with ChangeNotifier {
     if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);
     if (_blitz) {
-      _timer = Timer(_timerDuration, () => Audio.load(_timerAlarmSound).play());  // TODO: don't forget to .dispose() before loading new sound?
+      _timer = Timer(_timerDuration, () => Audio.load(_timerAlarmSound).play());
     } else {
       _timer = null;
     }
