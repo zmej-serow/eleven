@@ -94,7 +94,11 @@ class ScoresState extends State<Scores> {
   Future<int> getScoreValue(BuildContext context, int score) async {
     String dialogText = score == null ? "Enter score" : "Edit score";
     TextEditingController initialValue = score == null ? null : TextEditingController(text: score.toString());
-
+    int _parsedInput(String input) {
+      return input.contains(RegExp(r"\d"))
+          ? input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1))
+          : null;
+    }
     return await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -107,11 +111,7 @@ class ScoresState extends State<Scores> {
                 inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
                 decoration: InputDecoration(),
                 onSubmitted: (input) {
-                  Navigator.of(context).pop(
-                      input.contains(RegExp(r"\d"))
-                          ? input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1))
-                          : null
-                  );
+                  Navigator.of(context).pop(_parsedInput(input));
                 }
             ),
             actions: [

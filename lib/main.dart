@@ -110,7 +110,10 @@ class MainScreenState extends State<MainScreen> {
                 height: 20.0,
                 color: appState.prefs['primaryColor'],
               ),
-              onTap: () => colorPicker("primaryColor")
+              onTap: () async {
+                Color newColor = await getColor("primary", appState.prefs['primaryColor']);
+                appState.setColor("primaryColor", newColor);
+              }
           ),
           ListTile(
               title: Text("Accent color"),
@@ -119,7 +122,10 @@ class MainScreenState extends State<MainScreen> {
                 height: 20.0,
                 color: appState.prefs['accentColor'],
               ),
-              onTap: () => colorPicker("accentColor")
+              onTap: () async {
+                Color newColor = await getColor("accent", appState.prefs['accentColor']);
+                appState.setColor("accentColor", newColor);
+              }
           ),
           SwitchListTile(
               title: Text("Blitz mode"),
@@ -153,25 +159,27 @@ class MainScreenState extends State<MainScreen> {
         : Duration(minutes: newDurationInMinutes);
   }
 
-  void colorPicker(kind) {
-    final appState = Provider.of<AppState>(context, listen: false);
-
-    String colorType = kind == "primaryColor" ? "primary" : "accent";
-    showDialog(
+  Future<Color> getColor(String colorType, Color currentColor) {
+    Color newColor;
+    return showDialog(
       context: this.context,
       child: AlertDialog(
         title: Text('Select $colorType color:'),
         content: SingleChildScrollView(
           child: MaterialPicker(
             enableLabel: true,
-            pickerColor: appState.prefs[kind],
-            onColorChanged: (c) => appState.setColor(kind, c),
+            pickerColor: currentColor,
+            onColorChanged: (c) => newColor = c,
           ),
         ),
         actions: [
           FlatButton(
+            child: Text('Cancel'),
+            onPressed: () => Navigator.of(context).pop(currentColor),
+          ),
+          FlatButton(
             child: Text('Ok'),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(context).pop(newColor),
           ),
         ],
       ),
