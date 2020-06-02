@@ -16,58 +16,58 @@ class AppState with ChangeNotifier {
   List<Player> _players = [];
   int _currentPlayer = 0;
   ThemeData _themeData;
-  Map _prefs = {
+  bool _blitz = false;
+  Timer _timer;
+  Duration _timerDuration = Duration(minutes: 1);
+  String _timerAlarmSound = 'sounds/Drone.wav';
+  Map _themePrefs = {
     "textSize": 25.0,
     "brightness": Brightness.dark,
     "primaryColor": Color(0xff0277bd),
     "accentColor": Color(0xff42a5f5),
   };
-  bool _blitz = false;
-  Timer _timer;
-  Duration _timerDuration = Duration(minutes: 1);
-  Audio _timerAlarmSound = Audio.load('sounds/Drone.wav');  // TODO: don't forget to .dispose() before loading new sound
 
-  // getters
+  // getters and setters
   List<Player> get getPlayers => _players;
-  Map get prefs => _prefs;
+  Map get prefs => _themePrefs;
   bool get blitz => _blitz;
   Duration get timerDuration => _timerDuration;
   ThemeData get theme => _themeData;
 
+  set timerDuration(Duration duration) {
+    _timerDuration = duration;
+    _save();
+  }
+
+  set blitz(bool mode) {
+    _blitz = mode;
+    notifyListeners();
+  }
+
   // methods
   void themeTextSize(double size) {
-    _prefs['textSize'] = size;
+    _themePrefs['textSize'] = size;
     _updateTheme();
   }
 
-  void setBlitzDuration(Duration duration) {
-    _timerDuration = duration;
-    notifyListeners();
-  }
-
-  void flipBlitz(s) {
-    _blitz = s;
-    notifyListeners();
-  }
-
   void flipDark(s) {
-    _prefs['brightness'] = s ? Brightness.dark : Brightness.light;
+    _themePrefs['brightness'] = s ? Brightness.dark : Brightness.light;
     _updateTheme();
   }
 
   void setColor(String kind, c) {
-    _prefs[kind] = c;
+    _themePrefs[kind] = c;
     _updateTheme();
   }
 
   void _updateTheme() {
     _themeData = ThemeData(
-      brightness: _prefs['brightness'],
-      primaryColor: _prefs['primaryColor'],
-      accentColor: _prefs['accentColor'],
+      brightness: _themePrefs['brightness'],
+      primaryColor: _themePrefs['primaryColor'],
+      accentColor: _themePrefs['accentColor'],
       textTheme: TextTheme(
         headline5: TextStyle(
-            fontSize: _prefs['textSize'],
+            fontSize: _themePrefs['textSize'],
             fontWeight: FontWeight.bold
         ),
       ),
@@ -84,7 +84,7 @@ class AppState with ChangeNotifier {
     if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);
     if (_blitz) {
-      _timer = Timer(_timerDuration, () => _timerAlarmSound.play());
+      _timer = Timer(_timerDuration, () => Audio.load(_timerAlarmSound).play());  // TODO: don't forget to .dispose() before loading new sound?
     } else {
       _timer = null;
     }
@@ -124,6 +124,8 @@ class AppState with ChangeNotifier {
   void _store({bool load = false}) async {
     const String _spCurrentPlayer = 'elevenCurrentPlayer';
     const String _spPlayers = 'elevenPlayers';
+    const String _spBlitzDuration = 'elevenBlitzDuration';
+    const String _spBlitzAlarmSound = 'elevenBlitzAlarmSound';
     const String _spPrefs = 'elevenPreferences';
     final preferences = await SharedPreferences.getInstance();
 
@@ -133,13 +135,17 @@ class AppState with ChangeNotifier {
       _players = ps.isEmpty
           ? []
           : List<Player>.from(ps.map((i) => Player.fromJson(i)));
+      _timerDuration = Duration(minutes: preferences.getInt(_spBlitzDuration) ?? _timerDuration.inMinutes);
+      _timerAlarmSound = preferences.getString(_spBlitzAlarmSound) ?? _timerAlarmSound;
       var pr = preferences.getStringList(_spPrefs) ?? [];
-      if (pr.isNotEmpty) _prefs = deserialize(pr);
+      if (pr.isNotEmpty) _themePrefs = deserialize(pr);
       _updateTheme();
     } else {
       await preferences.setInt(_spCurrentPlayer, _currentPlayer);
       await preferences.setString(_spPlayers, json.encode(_players));
-      await preferences.setStringList(_spPrefs, serialize(_prefs));
+      await preferences.setStringList(_spPrefs, serialize(_themePrefs));
+      await preferences.setInt(_spBlitzDuration, _timerDuration.inMinutes);
+      await preferences.setString(_spBlitzAlarmSound, _timerAlarmSound);
     }
     notifyListeners();
   }

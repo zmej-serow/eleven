@@ -94,14 +94,14 @@ class MainScreenState extends State<MainScreen> {
                 value: appState.prefs['textSize'],
                 min: 18,
                 max: 40,
-                onChanged: (size) => Provider.of<AppState>(context, listen: false).themeTextSize(size),
+                onChanged: (size) => appState.themeTextSize(size),
               ),
               onTap: () => Navigator.of(context).pop()
           ),
           SwitchListTile(
               title: Text("Dark mode"),
               value: appState.prefs['brightness'] == Brightness.dark ? true : false,
-              onChanged: (state) => Provider.of<AppState>(context, listen: false).flipDark(state)
+              onChanged: (state) => appState.flipDark(state)
           ),
           ListTile(
               title: Text("Primary color"),
@@ -124,12 +124,12 @@ class MainScreenState extends State<MainScreen> {
           SwitchListTile(
               title: Text("Blitz mode"),
               value: appState.blitz,
-              onChanged: (state) => Provider.of<AppState>(context, listen: false).flipBlitz(state)
+              onChanged: (state) => appState.blitz = state
           ),
           ListTile(
               title: Text("Blitz round timer"),
               trailing: Text("${appState.timerDuration.inMinutes.toString()} min"),
-              onTap: () async => appState.setBlitzDuration(await blitzDurationPicker(appState.timerDuration))
+              onTap: () async => appState.timerDuration = await blitzDurationPicker(appState.timerDuration)
           ),
         ],
       ),
@@ -165,7 +165,7 @@ class MainScreenState extends State<MainScreen> {
           child: MaterialPicker(
             enableLabel: true,
             pickerColor: appState.prefs[kind],
-            onColorChanged: (c) => Provider.of<AppState>(context, listen: false).setColor(kind, c),
+            onColorChanged: (c) => appState.setColor(kind, c),
           ),
         ),
         actions: [
