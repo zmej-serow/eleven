@@ -23,7 +23,7 @@ class FinalScoresState extends State<FinalScores> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: newGame,
+          onPressed: () async => await resetScore(context) ? appState.newGame() : null,
           backgroundColor: Colors.red,
           child: Icon(Icons.delete),
         )
@@ -38,10 +38,10 @@ class FinalScoresState extends State<FinalScores> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(player.name,
-                      style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   Text(player.totalScore().toString(),
-                      style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ]
             )
@@ -49,32 +49,28 @@ class FinalScoresState extends State<FinalScores> {
     );
   }
 
-  void newGame() async {
-    bool newGame = await showDialog(
-        context: this.context,
-        child: newGameDialog(context)
-    );
-    if (newGame)
-      Provider.of<AppState>(context, listen: false).newGame();
-  }
-
-  Widget newGameDialog(BuildContext context) {
-    return AlertDialog(
-      title: Text("Are you sure?"),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-        ),
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-        ),
-      ],
+  Future<bool> resetScore(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Are you sure?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        }
     );
   }
 }
