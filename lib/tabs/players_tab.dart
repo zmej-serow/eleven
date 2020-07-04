@@ -27,30 +27,10 @@ class PlayersSelectionState extends State<PlayersSelection> {
                 style: Theme.of(context).textTheme.headline5,
               ),
               trailing: Icon(Icons.delete),
-              onTap: () => appState.removePlayer(player.name)
-            ))
-          )
+              onTap: () => appState.removePlayer(player.name))))
           .values
           .toList(),
       ),
-
-//      body: ListView.separated(
-//        itemCount: appState.getPlayers.length,
-//        itemBuilder: (context, index) {
-//          return ListTile(
-//              title: Text(
-//                appState.getPlayers[index].name ?? "",  // ????????
-//                style: Theme.of(context).textTheme.headline5,
-//              ),
-//              trailing: Icon(Icons.delete),
-//              onTap: () => appState.removePlayer(appState.getPlayers[index].name)
-//          );
-//        },
-//        separatorBuilder: (context, index) {
-//          return Divider(height: 0, thickness: 1);
-//        },
-//      ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           String name = await newPlayerName(context);
