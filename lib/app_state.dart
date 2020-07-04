@@ -98,6 +98,11 @@ class AppState with ChangeNotifier {
     _save();
   }
 
+  void tossCoin() {
+    _players.shuffle();
+    _save();
+  }
+
   void addScore(int score) {
     if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);

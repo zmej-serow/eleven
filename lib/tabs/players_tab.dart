@@ -31,13 +31,28 @@ class PlayersSelectionState extends State<PlayersSelection> {
           .values
           .toList(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          String name = await newPlayerName(context);
-          if (name != "") appState.addPlayer(Player(name, []));
-        },
-        child: Icon(Icons.person_add),
-      ),
+
+      floatingActionButtonLocation:
+      FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            FloatingActionButton(
+              onPressed: () => appState.tossCoin(),
+              child: Icon(Icons.cached),
+            ),
+            FloatingActionButton(
+              onPressed: () async {
+                String name = await newPlayerName(context);
+                if (name != "") appState.addPlayer(Player(name, []));
+              },
+              child: Icon(Icons.person_add),
+            )
+          ],
+        ),
+      )
     );
   }
 
