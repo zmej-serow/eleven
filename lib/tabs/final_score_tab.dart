@@ -30,11 +30,17 @@ class FinalScoresState extends State<FinalScores> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               FloatingActionButton(
-                onPressed: () async => await endGame(context) ? appState.finishGame() : null,
+                onPressed: () async {
+                  String question = "Finish this game?";
+                  await dialogOkCancel(context, question) ? appState.finishGame() : null;
+                },
                 child: Icon(Icons.close),
               ),
               FloatingActionButton(
-                onPressed: () async => await resetScore(context) ? appState.newGame() : null,
+                onPressed: () async {
+                  String question = "Are you sure to reset the score and start new game?";
+                  await dialogOkCancel(context, question) ? appState.newGame() : null;
+                },
                 backgroundColor: Colors.red,
                 child: Icon(Icons.delete),
               )
@@ -63,37 +69,12 @@ class FinalScoresState extends State<FinalScores> {
     );
   }
 
-  Future<bool> resetScore(BuildContext context) async {
+  Future<bool> dialogOkCancel (BuildContext context, String text) async {
     return await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Are you sure to reset the score and start new game?"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              FlatButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  Future<bool> endGame(BuildContext context) async {
-    return await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Finish this game?"),
+            title: Text(text),
             actions: <Widget>[
               FlatButton(
                 child: Text('CANCEL'),
