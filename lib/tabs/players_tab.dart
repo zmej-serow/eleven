@@ -42,6 +42,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
   }
 
   Future<String> newPlayerName(BuildContext context) async {
+    String playerName;
     return await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -49,6 +50,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
             title: Text("Enter player's name"),
             content: TextField(
                 autofocus: true,
+                onChanged: (s) => playerName = s,
                 decoration: InputDecoration(),
                 onSubmitted: (s) => Navigator.of(context).pop(s)
             ),
@@ -57,6 +59,12 @@ class PlayersSelectionState extends State<PlayersSelection> {
                 child: Text('CANCEL'),
                 onPressed: () {
                   Navigator.of(context).pop("");
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(playerName);
                 },
               ),
             ],
