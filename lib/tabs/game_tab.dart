@@ -93,6 +93,7 @@ class ScoresState extends State<Scores> {
 
   Future<int> getScoreValue(BuildContext context, int score) async {
     String dialogText = score == null ? "Enter score" : "Edit score";
+    String scoreEntered;
     TextEditingController initialValue = score == null ? null : TextEditingController(text: score.toString());
     int _parsedInput(String input) {
       return input.contains(RegExp(r"\d"))
@@ -110,14 +111,17 @@ class ScoresState extends State<Scores> {
                 keyboardType: TextInputType.phone,
                 inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
                 decoration: InputDecoration(),
-                onSubmitted: (input) {
-                  Navigator.of(context).pop(_parsedInput(input));
-                }
+                onChanged: (s) => scoreEntered = s,
+                onSubmitted: (_) => Navigator.of(context).pop(_parsedInput(scoreEntered))
             ),
             actions: [
               FlatButton(
                   child: Text('CANCEL'),
                   onPressed: () => Navigator.of(context).pop()
+              ),
+              FlatButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(context).pop(_parsedInput(scoreEntered)),
               ),
             ],
           );

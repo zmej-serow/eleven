@@ -57,15 +57,11 @@ class PlayersSelectionState extends State<PlayersSelection> {
             actions: <Widget>[
               FlatButton(
                 child: Text('CANCEL'),
-                onPressed: () {
-                  Navigator.of(context).pop("");
-                },
+                onPressed: () => Navigator.of(context).pop(""),
               ),
               FlatButton(
                 child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop(playerName);
-                },
+                onPressed: () => Navigator.of(context).pop(playerName),
               ),
             ],
           );
