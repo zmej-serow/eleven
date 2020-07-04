@@ -40,7 +40,23 @@ class PlayersSelectionState extends State<PlayersSelection> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             FloatingActionButton(
-              onPressed: () => appState.tossCoin(),
+              onPressed: () async {
+                appState.tossCoin();
+                await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Player list shuffled!"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text('OK'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ]
+                    );
+                  }
+                );
+              },
               child: Icon(Icons.cached),
             ),
             FloatingActionButton(
