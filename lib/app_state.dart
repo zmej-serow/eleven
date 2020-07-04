@@ -91,6 +91,13 @@ class AppState with ChangeNotifier {
     _save();
   }
 
+  void switchPlayers(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+    final player = _players.removeAt(oldIndex);
+    _players.insert(newIndex, player);
+    _save();
+  }
+
   void addScore(int score) {
     if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);

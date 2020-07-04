@@ -10,27 +10,47 @@ class PlayersSelection extends StatefulWidget {
 }
 
 class PlayersSelectionState extends State<PlayersSelection> {
+
   @override
   Widget build(BuildContext context) {
     final appState = Provider.of<AppState>(context);
 
     return Scaffold(
-      body: ListView.separated(
-        itemCount: appState.getPlayers.length,
-        itemBuilder: (context, index) {
-          return ListTile(
+      body: ReorderableListView(
+        onReorder: (oldIndex, newIndex) => appState.switchPlayers(oldIndex, newIndex),
+        children: appState.getPlayers
+          .asMap()
+          .map((index, player) => MapEntry(index, ListTile(
+              key: ValueKey(index),
               title: Text(
-                appState.getPlayers[index].name ?? "",  // ????????
+                player.name,
                 style: Theme.of(context).textTheme.headline5,
               ),
               trailing: Icon(Icons.delete),
-              onTap: () => appState.removePlayer(appState.getPlayers[index].name)
-          );
-        },
-        separatorBuilder: (context, index) {
-          return Divider(height: 0, thickness: 1);
-        },
+              onTap: () => appState.removePlayer(player.name)
+            ))
+          )
+          .values
+          .toList(),
       ),
+
+//      body: ListView.separated(
+//        itemCount: appState.getPlayers.length,
+//        itemBuilder: (context, index) {
+//          return ListTile(
+//              title: Text(
+//                appState.getPlayers[index].name ?? "",  // ????????
+//                style: Theme.of(context).textTheme.headline5,
+//              ),
+//              trailing: Icon(Icons.delete),
+//              onTap: () => appState.removePlayer(appState.getPlayers[index].name)
+//          );
+//        },
+//        separatorBuilder: (context, index) {
+//          return Divider(height: 0, thickness: 1);
+//        },
+//      ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           String name = await newPlayerName(context);
