@@ -27,9 +27,9 @@ class ScoresState extends State<Scores> {
                 children: [
                   for (var player in appState.getPlayers) Expanded(
                       child: Text(
-                          player.name,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline5,
+                        player.name,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline5,
                       )
                   )
                 ],
@@ -62,11 +62,14 @@ class ScoresState extends State<Scores> {
       separatorBuilder: (context, index) => Divider(height: 0),
       itemBuilder: (context, index) {
         if (index == scores.length)
-          if (appState.isPlayerCurrent(player))
+          if (appState.isPlayerCurrent(player) && appState.gameIsRunning)
             return ListTile(
                 title: FloatingActionButton(
                   mini: true,
-                  onPressed: addScore,
+                  onPressed: () async {
+                    int newScore = await getScoreValue(context, null);
+                    if (newScore != null) appState.addScore(newScore);
+                  },
                   child: Icon(Icons.add),
                 )
             );
@@ -74,63 +77,51 @@ class ScoresState extends State<Scores> {
             return null;
         else
           return ListTile(
-            onLongPress: () => editScore(player, index, scores[index]),
+            onLongPress: () async {
+              int newScore = await getScoreValue(context, scores[index]);
+              if (newScore != null) appState.editScore(player, index, newScore);
+            },
             title: Text(
-                scores[index].toString(),
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline5,
+              scores[index].toString(),
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headline5,
             ),
           );
       },
     );
   }
 
-  void editScore(Player player, int index, int oldScore) async {
-    int newScore = await showDialog(
-        context: this.context,
-        child: scoreDialog(context, oldScore)
-    );
-    if (newScore != null) {
-      Provider.of<AppState>(context, listen: false).editScore(player, index, newScore);
-    }
-  }
-
-  void addScore() async {
-    int score = await showDialog(
-        context: this.context,
-        child: scoreDialog(context, null)
-    );
-    if (score != null) {
-      Provider.of<AppState>(context, listen: false).addScore(score);
-    }
-  }
-
-  int parseInput(input) {
-    return input.contains(RegExp(r"\d"))
-        ? input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1))
-        : null;
-  }
-
-  Widget scoreDialog(BuildContext context, int score) {
+  Future<int> getScoreValue(BuildContext context, int score) async {
     String dialogText = score == null ? "Enter score" : "Edit score";
     TextEditingController initialValue = score == null ? null : TextEditingController(text: score.toString());
-
-    return AlertDialog(
-      title: Text(dialogText),
-      content: TextField(
-          controller: initialValue,
-          autofocus: true,
-          keyboardType: TextInputType.phone,
-          inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
-          decoration: InputDecoration(),
-          onSubmitted: (input) => Navigator.of(context).pop(parseInput(input))
-      ),
-      actions: [
-        FlatButton(
-            child: Text('CANCEL'),
-            onPressed: () => Navigator.of(context).pop()
-        ),
-      ],
+    int _parsedInput(String input) {
+      return input.contains(RegExp(r"\d"))
+          ? input.split("*").fold(1, (a, b) => a * (int.tryParse(b) ?? 1))
+          : null;
+    }
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(dialogText),
+            content: TextField(
+                controller: initialValue,
+                autofocus: true,
+                keyboardType: TextInputType.phone,
+                inputFormatters: [WhitelistingTextInputFormatter(RegExp(r"\d|\*"))],
+                decoration: InputDecoration(),
+                onSubmitted: (input) {
+                  Navigator.of(context).pop(_parsedInput(input));
+                }
+            ),
+            actions: [
+              FlatButton(
+                  child: Text('CANCEL'),
+                  onPressed: () => Navigator.of(context).pop()
+              ),
+            ],
+          );
+        }
     );
   }
 }

@@ -20,14 +20,11 @@ class PlayersSelectionState extends State<PlayersSelection> {
         itemBuilder: (context, index) {
           return ListTile(
               title: Text(
-                appState.getPlayers[index].name,
+                appState.getPlayers[index].name ?? "",  // ????????
                 style: Theme.of(context).textTheme.headline5,
               ),
               trailing: Icon(Icons.delete),
-              onTap: () =>
-                  Provider.of<AppState>(context, listen: false).removePlayer(
-                      appState.getPlayers[index].name
-                  )
+              onTap: () => appState.removePlayer(appState.getPlayers[index].name)
           );
         },
         separatorBuilder: (context, index) {
@@ -35,39 +32,36 @@ class PlayersSelectionState extends State<PlayersSelection> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: createPlayer,
+        onPressed: () async {
+          String name = await newPlayerName(context);
+          if (name != "") appState.addPlayer(Player(name, []));
+        },
         child: Icon(Icons.person_add),
       ),
     );
   }
 
-  void createPlayer() async {
-    String name = await showDialog(
-        context: this.context,
-        child: playerNameDialog(context)
-    );
-    if (name != null && name != "")
-      Provider.of<AppState>(context, listen: false).addPlayer(
-          Player(name, [])
-      );
-  }
-
-  Widget playerNameDialog(BuildContext context) {
-    return AlertDialog(
-      title: Text("Enter player's name"),
-      content: TextField(
-          autofocus: true,
-          decoration: InputDecoration(),
-          onSubmitted: (s) => Navigator.of(context).pop(s)
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
+  Future<String> newPlayerName(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Enter player's name"),
+            content: TextField(
+                autofocus: true,
+                decoration: InputDecoration(),
+                onSubmitted: (s) => Navigator.of(context).pop(s)
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop("");
+                },
+              ),
+            ],
+          );
+        }
     );
   }
 }

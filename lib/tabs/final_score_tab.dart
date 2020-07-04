@@ -22,10 +22,24 @@ class FinalScoresState extends State<FinalScores> {
             for (var player in sortedPlayers) finalScore(player)
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: newGame,
-          backgroundColor: Colors.red,
-          child: Icon(Icons.delete),
+        floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FloatingActionButton(
+                onPressed: () async => await endGame(context) ? appState.finishGame() : null,
+                child: Icon(Icons.close),
+              ),
+              FloatingActionButton(
+                onPressed: () async => await resetScore(context) ? appState.newGame() : null,
+                backgroundColor: Colors.red,
+                child: Icon(Icons.delete),
+              )
+            ],
+          ),
         )
     );
   }
@@ -38,10 +52,10 @@ class FinalScoresState extends State<FinalScores> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(player.name,
-                      style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                   Text(player.totalScore().toString(),
-                      style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ]
             )
@@ -49,32 +63,53 @@ class FinalScoresState extends State<FinalScores> {
     );
   }
 
-  void newGame() async {
-    bool newGame = await showDialog(
-        context: this.context,
-        child: newGameDialog(context)
+  Future<bool> resetScore(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Are you sure to reset the score and start new game?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        }
     );
-    if (newGame)
-      Provider.of<AppState>(context, listen: false).newGame();
   }
 
-  Widget newGameDialog(BuildContext context) {
-    return AlertDialog(
-      title: Text("Are you sure?"),
-      actions: <Widget>[
-        FlatButton(
-          child: Text('CANCEL'),
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-        ),
-        FlatButton(
-          child: Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-        ),
-      ],
+  Future<bool> endGame(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Finish this game?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        }
     );
   }
 }
