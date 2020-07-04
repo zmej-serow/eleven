@@ -15,6 +15,7 @@ class AppState with ChangeNotifier {
   // defaults
   List<Player> _players = [];
   int _currentPlayer = 0;
+  bool _gameIsRunning = true;
   ThemeData _themeData;
   bool _blitz = false;
   Timer _timer;
@@ -29,6 +30,7 @@ class AppState with ChangeNotifier {
 
   // getters and setters
   List<Player> get getPlayers => _players;
+  bool get gameIsRunning => _gameIsRunning;
   Map get prefs => _themePrefs;
   bool get blitz => _blitz;
   String get timerAlarmSound => _timerAlarmSound.substring( // todo: fix this shit with regexp pattern matching?
@@ -38,6 +40,7 @@ class AppState with ChangeNotifier {
   ThemeData get theme => _themeData;
 
   set timerAlarmSound(String sound) {
+    print("sounds/$sound.mp3");
     _timerAlarmSound = "sounds/$sound.mp3";
     _save();    // TODO: don't forget to save timer value, cancel it and restart with old value and new sound!
   }
@@ -92,7 +95,7 @@ class AppState with ChangeNotifier {
     if (_timer != null) _timer.cancel();
     _players[_currentPlayer].addScore(score);
     if (_blitz) {
-      _timer = Timer(_timerDuration, () => Audio.load(_timerAlarmSound).play());
+      _timer = Timer(_timerDuration, () => Audio.load(_timerAlarmSound.replaceAll(' ', '_')).play());
     } else {
       _timer = null;
     }
@@ -105,7 +108,15 @@ class AppState with ChangeNotifier {
     _save();
   }
 
+  void finishGame() {
+    if (_timer != null) _timer.cancel();
+    _gameIsRunning = false;
+    _save();
+  }
+
   void newGame() {
+    if (_timer != null) _timer.cancel();
+    _gameIsRunning = true;
     _players.forEach((player) {player.scores = [];});
     _currentPlayer = 0;
     _save();
@@ -135,10 +146,12 @@ class AppState with ChangeNotifier {
     const String _spBlitzDuration = 'elevenBlitzDuration';
     const String _spBlitzAlarmSound = 'elevenBlitzAlarmSound';
     const String _spPrefs = 'elevenPreferences';
+    const String _spGameIsRunning = 'elevenGameIsRunning';
     final preferences = await SharedPreferences.getInstance();
 
     if (load) {
       _currentPlayer = preferences.getInt(_spCurrentPlayer) ?? 0;
+      _gameIsRunning = preferences.getBool(_spGameIsRunning) ?? true;
       var ps = json.decode(preferences.getString(_spPlayers) ?? "{}");
       _players = ps.isEmpty
           ? []
@@ -150,6 +163,7 @@ class AppState with ChangeNotifier {
       _updateTheme();
     } else {
       await preferences.setInt(_spCurrentPlayer, _currentPlayer);
+      await preferences.setBool(_spGameIsRunning, _gameIsRunning);
       await preferences.setString(_spPlayers, json.encode(_players));
       await preferences.setStringList(_spPrefs, serialize(_themePrefs));
       await preferences.setInt(_spBlitzDuration, _timerDuration.inMinutes);

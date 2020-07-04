@@ -22,10 +22,24 @@ class FinalScoresState extends State<FinalScores> {
             for (var player in sortedPlayers) finalScore(player)
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async => await resetScore(context) ? appState.newGame() : null,
-          backgroundColor: Colors.red,
-          child: Icon(Icons.delete),
+        floatingActionButtonLocation:
+          FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              FloatingActionButton(
+                onPressed: () async => await endGame(context) ? appState.finishGame() : null,
+                child: Icon(Icons.close),
+              ),
+              FloatingActionButton(
+                onPressed: () async => await resetScore(context) ? appState.newGame() : null,
+                backgroundColor: Colors.red,
+                child: Icon(Icons.delete),
+              )
+            ],
+          ),
         )
     );
   }
@@ -54,7 +68,32 @@ class FinalScoresState extends State<FinalScores> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Are you sure?"),
+            title: Text("Are you sure to reset the score and start new game?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('CANCEL'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  Future<bool> endGame(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Finish this game?"),
             actions: <Widget>[
               FlatButton(
                 child: Text('CANCEL'),

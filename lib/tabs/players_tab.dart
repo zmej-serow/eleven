@@ -20,7 +20,7 @@ class PlayersSelectionState extends State<PlayersSelection> {
         itemBuilder: (context, index) {
           return ListTile(
               title: Text(
-                appState.getPlayers[index].name,
+                appState.getPlayers[index].name ?? "",  // ????????
                 style: Theme.of(context).textTheme.headline5,
               ),
               trailing: Icon(Icons.delete),

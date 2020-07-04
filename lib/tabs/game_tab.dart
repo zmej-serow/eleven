@@ -62,7 +62,7 @@ class ScoresState extends State<Scores> {
       separatorBuilder: (context, index) => Divider(height: 0),
       itemBuilder: (context, index) {
         if (index == scores.length)
-          if (appState.isPlayerCurrent(player))
+          if (appState.isPlayerCurrent(player) && appState.gameIsRunning)
             return ListTile(
                 title: FloatingActionButton(
                   mini: true,
