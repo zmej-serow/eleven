@@ -20,22 +20,14 @@ class PlayersSelectionState extends State<PlayersSelection> {
         onReorder: (oldIndex, newIndex) => appState.switchPlayers(oldIndex, newIndex),
         children: appState.getPlayers
           .asMap()
-          .map((index, player) => MapEntry(index, ListTile(
-              key: ValueKey(index),
-              title: Text(
-                player.name,
-                style: Theme.of(context).textTheme.headline5,
-              ),
-              trailing: Icon(Icons.delete),
-              onTap: () => appState.removePlayer(player.name))))
+          .map((index, player) => MapEntry(index, playerCard(index, player)))
           .values
           .toList(),
       ),
 
-      floatingActionButtonLocation:
-      FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: EdgeInsets.all(20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -69,6 +61,35 @@ class PlayersSelectionState extends State<PlayersSelection> {
           ],
         ),
       )
+    );
+  }
+
+  Widget playerCard(index, player) {
+    final appState = Provider.of<AppState>(context);
+
+    return Card(
+        key: ValueKey(index),
+        child: Row(
+          children: [
+            Icon(Icons.more_vert),
+            Expanded(
+                child:
+                ListTile(
+                  title: Text(
+                    player.name,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                )
+            ),
+            GestureDetector(
+                onTap: () => appState.removePlayer(player.name),
+                child: Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Icon(Icons.delete)
+                )
+            )
+          ],
+        )
     );
   }
 
